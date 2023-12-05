@@ -8,14 +8,14 @@ authors = [
 license = {text = "MIT"}
 requires-python = ">=3.10"
 dependencies = [
-    "litestar[sqlalchemy,standard]>=2.3.2",
-    "psycopg>=3.1.12",
-    "alembic>=1.12.1",
+    "litestar[sqlalchemy,standard]>=2.4.2",
+    "psycopg>=3.1.14",
+    "alembic>=1.13.0",
 ]
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "ruff>=0.1.5",
+    "ruff>=0.1.7",
 ]
 
 [tool.pdm.scripts]
