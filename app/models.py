@@ -25,7 +25,19 @@ class Book(Base):
     categories: "Mapped[list[Category]]" = relationship(
         back_populates="books", secondary="books_categories"
     )
+    loans: "Mapped[list[Loan]]" = relationship(back_populates="book")
+    copies: "Mapped[list[BookCopy]]" = relationship(back_populates="book")  # Agregado
 
+
+class BookCopy(Base):
+    __tablename__ = "book_copies"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    book_id: Mapped[int] = mapped_column(ForeignKey("books.id"))
+    is_available: Mapped[bool] = mapped_column(default=True)
+
+    # relationships
+    book: "Mapped[Book]" = relationship(back_populates="copies")
 
 class Author(Base):
     __tablename__ = "authors"
@@ -56,3 +68,27 @@ class BookCategory(Base):
 
     book_id: Mapped[int] = mapped_column(ForeignKey("books.id"), primary_key=True)
     category_id: Mapped[int] = mapped_column(ForeignKey("categories.id"), primary_key=True)
+
+class Client(Base):
+    __tablename__ = "clients"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(index=True)
+    email: Mapped[str] = mapped_column(index=True, unique=True)
+
+    loans: "Mapped[list[Loan]]" = relationship(back_populates="client")
+
+class Loan(Base):
+    __tablename__ = "loans"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    book_id: Mapped[int] = mapped_column(ForeignKey("books.id"))
+    client_id: Mapped[int] = mapped_column(ForeignKey("clients.id"))
+    loan_date: Mapped[date]
+    return_date: Mapped[Optional[date]]
+    is_returned: Mapped[bool]
+    overdue_fine: Mapped[int] = mapped_column(default=0)  # Nuevo campo para almacenar la multa
+
+    # relationships
+    book: "Mapped[Book]" = relationship(back_populates="loans")
+    client: "Mapped[Client]" = relationship(back_populates="loans")
